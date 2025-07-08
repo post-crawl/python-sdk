@@ -1,0 +1,96 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "postcrawl"
+version = "0.1.0"
+description = "Python SDK for PostCrawl - The Fastest LLM Ready Social Media Crawler"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{ name = "PostCrawl Team", email = "support@postcrawl.com" }]
+keywords = [
+    "postcrawl",
+    "social-media",
+    "scraping",
+    "reddit",
+    "tiktok",
+    "api",
+    "sdk",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Internet :: WWW/HTTP",
+    "Typing :: Typed",
+]
+dependencies = [
+    "pydantic>=2.0,<3.0",
+    "httpx>=0.25,<1.0",
+    "typing-extensions>=4.8,<5.0",
+    "python-dotenv>=1.1.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "pytest-asyncio>=0.21",
+    "pytest-httpx>=0.22",
+    "black>=23.0",
+    "mypy>=1.5",
+    "ruff>=0.1.0",
+]
+
+[project.urls]
+Homepage = "https://postcrawl.com/"
+Documentation = "https://github.com/post-crawl/python-sdk/README.md"
+Repository = "https://github.com/post-crawl/python-sdk"
+Issues = "https://github.com/post-crawl/python-sdk/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/postcrawl"]
+
+[tool.hatch.build.targets.sdist]
+include = ["/src", "/README.md", "/LICENSE"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+# Remove old test-py workspace reference
+# [tool.uv.workspace]
+# members = ["test-py"]

@@ -120,4 +120,8 @@ verify: build
 
 # Publish to TestPyPI
 publish-test: build
-	uv publish --index-url https://test.pypi.org/legacy/
+	uv run twine upload --repository testpypi dist/*
+
+# Publish to PyPI (production)
+publish: build
+	uv run twine upload dist/*

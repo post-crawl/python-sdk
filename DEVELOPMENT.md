@@ -48,7 +48,8 @@ make sne          # Run search and extract example
 make build        # Build distribution packages
 make verify       # Verify package installation
 make clean        # Clean build artifacts
-make publish-test # Publish to TestPyPI (requires credentials)
+make publish-test # Publish to TestPyPI (requires ~/.pypirc)
+make publish      # Publish to PyPI (requires ~/.pypirc)
 
 # Type generation
 make generate-types # Regenerate types from TypeScript schemas
@@ -166,7 +167,7 @@ make verify
 make publish-test
 
 # Publish to PyPI (production)
-uv publish
+make publish
 ```
 
 ## Contributing

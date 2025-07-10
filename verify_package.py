@@ -148,11 +148,13 @@ except Exception as e:
     print("\n✅ All verification tests passed!")
     print(f"\n📦 Package version: {version}")
     print("\n📤 Ready to publish to TestPyPI:")
-    print("   uv publish --publish-url https://test.pypi.org/legacy/")
+    print("   make publish-test")
+    print("   # or: uv run twine upload --repository testpypi dist/*")
     print("\n📥 To test installation from TestPyPI:")
     print(f"   pip install -i https://test.pypi.org/simple/ postcrawl=={version}")
     print("\n📤 When ready for production PyPI:")
-    print("   uv publish")
+    print("   make publish")
+    print("   # or: uv run twine upload dist/*")
 
 
 if __name__ == "__main__":

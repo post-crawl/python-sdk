@@ -136,6 +136,9 @@ celerybeat.pid
 
 # Environments
 .env
+.env.*
+!.env.example
+!examples/.env.example
 .envrc
 .venv
 env/
@@ -190,6 +193,17 @@ cython_debug/
 
 # Ruff stuff:
 .ruff_cache/
+
+# Additional caches
+*.pyc
+.DS_Store
+.idea/
+*.swp
+*.swo
+*~
+.cache/
+.temp/
+.tmp/
 
 # PyPI configuration file
 .pypirc

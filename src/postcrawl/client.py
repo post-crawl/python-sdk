@@ -37,15 +37,13 @@ from .types import (
     ExtractedPost,
     ExtractRequest,
     ExtractResponse,
-    RedditPost,
     ResponseMode,
     SearchAndExtractRequest,
     SearchAndExtractResponse,
     SearchRequest,
     SearchResponse,
+    SearchResult,
     SocialPlatform,
-    SocialPost,
-    TiktokPost,
 )
 
 
@@ -123,21 +121,21 @@ class PostCrawlClient:
             )
         return self._client
 
-    async def __aenter__(self):
+    async def __aenter__(self) -> "PostCrawlClient":
         """Async context manager entry."""
         return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
+    async def __aexit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         """Async context manager exit."""
         await self.close()
 
-    async def close(self):
+    async def close(self) -> None:
         """Close the HTTP client."""
         if self._client:
             await self._client.aclose()
             self._client = None
 
-    def _update_rate_limit_info(self, headers: httpx.Headers):
+    def _update_rate_limit_info(self, headers: httpx.Headers) -> None:
         """Update rate limit information from response headers."""
         if RATE_LIMIT_HEADER in headers:
             self.rate_limit_info["limit"] = int(headers[RATE_LIMIT_HEADER])
@@ -184,7 +182,7 @@ class PostCrawlClient:
                 )
             raise NetworkError(f"Network error: {str(e)}", original_error=e) from None
 
-    async def _handle_error_response(self, response: httpx.Response):
+    async def _handle_error_response(self, response: httpx.Response) -> None:
         """Handle error responses from the API."""
         try:
             error_data = response.json()
@@ -251,7 +249,7 @@ class PostCrawlClient:
             page: Page number for pagination (starts at 1)
 
         Returns:
-            List of social posts matching the search criteria
+            List of SearchResult objects with title, url, snippet, date, and image_url
 
         Raises:
             ValidationError: If request parameters are invalid
@@ -290,7 +288,7 @@ class PostCrawlClient:
 
         # Parse response
         data = response.json()
-        return [SocialPost(**post) for post in data]
+        return [SearchResult(**post) for post in data]
 
     async def extract(
         self,
@@ -344,32 +342,9 @@ class PostCrawlClient:
             json=request.model_dump(mode="json", exclude_none=True),
         )
 
-        # Parse response with platform-specific types
+        # Parse response - Pydantic will handle type validation automatically
         data = response.json()
-        posts = []
-        for post_data in data:
-            # Parse raw field based on source platform
-            if (
-                post_data.get("source") == "reddit"
-                and post_data.get("raw")
-                and not post_data.get("error")
-            ):
-                try:
-                    post_data["raw"] = RedditPost(**post_data["raw"])
-                except Exception:
-                    pass  # Keep as dict if parsing fails
-            elif (
-                post_data.get("source") == "tiktok"
-                and post_data.get("raw")
-                and not post_data.get("error")
-            ):
-                try:
-                    post_data["raw"] = TiktokPost(**post_data["raw"])
-                except Exception:
-                    pass  # Keep as dict if parsing fails
-
-            posts.append(ExtractedPost(**post_data))
-        return posts
+        return [ExtractedPost(**post_data) for post_data in data]
 
     async def search_and_extract(
         self,
@@ -432,42 +407,19 @@ class PostCrawlClient:
             json=request.model_dump(mode="json", exclude_none=True),
         )
 
-        # Parse response with platform-specific types
+        # Parse response - Pydantic will handle type validation automatically
         data = response.json()
-        posts = []
-        for post_data in data:
-            # Parse raw field based on source platform
-            if (
-                post_data.get("source") == "reddit"
-                and post_data.get("raw")
-                and not post_data.get("error")
-            ):
-                try:
-                    post_data["raw"] = RedditPost(**post_data["raw"])
-                except Exception:
-                    pass  # Keep as dict if parsing fails
-            elif (
-                post_data.get("source") == "tiktok"
-                and post_data.get("raw")
-                and not post_data.get("error")
-            ):
-                try:
-                    post_data["raw"] = TiktokPost(**post_data["raw"])
-                except Exception:
-                    pass  # Keep as dict if parsing fails
-
-            posts.append(ExtractedPost(**post_data))
-        return posts
+        return [ExtractedPost(**post_data) for post_data in data]
 
     # Synchronous convenience methods
-    def search_sync(self, **kwargs) -> SearchResponse:
+    def search_sync(self, **kwargs: Any) -> SearchResponse:
         """Synchronous version of search()."""
         return asyncio.run(self.search(**kwargs))
 
-    def extract_sync(self, **kwargs) -> ExtractResponse:
+    def extract_sync(self, **kwargs: Any) -> ExtractResponse:
         """Synchronous version of extract()."""
         return asyncio.run(self.extract(**kwargs))
 
-    def search_and_extract_sync(self, **kwargs) -> SearchAndExtractResponse:
+    def search_and_extract_sync(self, **kwargs: Any) -> SearchAndExtractResponse:
         """Synchronous version of search_and_extract()."""
         return asyncio.run(self.search_and_extract(**kwargs))

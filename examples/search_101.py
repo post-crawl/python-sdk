@@ -6,15 +6,13 @@ Simple search example - PostCrawl SDK 101
 import asyncio
 import os
 
-from postcrawl import PostCrawlClient, SocialPost
-
 # Load environment variables from .env file
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except ImportError:
-    # python-dotenv is optional, just continue without it
-    pass
+from dotenv import load_dotenv
+
+from postcrawl import PostCrawlClient
+
+load_dotenv()
+
 
 API_KEY = os.getenv("POSTCRAWL_API_KEY", "sk_your_api_key_here")
 
@@ -39,13 +37,17 @@ async def main():
 
     # Print results with proper type annotations
     print(f"Found {len(results)} posts:")
-    for post in results:  # post is of type SocialPost
-        print(f"- {post.title}")
+    for post in results:  # post is of type SearchResult
+        print(f"\n- {post.title}")
         print(f"  URL: {post.url}")
-        print(f"  Platform: {post.social_source}")
-        print(f"  Author: {post.author}")
-        print(f"  Stats: {post.upvotes} upvotes, {post.comments} comments")
-        print()
+        print(f"  Date: {post.date}")
+        print(
+            f"  Snippet: {post.snippet[:100]}..."
+            if len(post.snippet) > 100
+            else f"  Snippet: {post.snippet}"
+        )
+        if post.image_url:
+            print(f"  Image: {post.image_url}")
 
 
 if __name__ == "__main__":

@@ -5,7 +5,7 @@ This SDK provides a simple and type-safe way to interact with the PostCrawl API
 for searching and extracting content from social media platforms.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 from .client import PostCrawlClient
 from .exceptions import (
@@ -29,6 +29,7 @@ from .types import (
     SearchAndExtractResponse,
     SearchRequest,
     SearchResponse,
+    SearchResult,
     SocialPlatform,
     SocialPost,
     TiktokComment,
@@ -49,6 +50,7 @@ __all__ = [
     "SearchAndExtractResponse",
     "SearchRequest",
     "SearchResponse",
+    "SearchResult",
     "SocialPlatform",
     "SocialPost",
     "TiktokComment",

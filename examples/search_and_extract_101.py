@@ -6,15 +6,13 @@ Simple search and extract example - PostCrawl SDK 101
 import asyncio
 import os
 
-from postcrawl import PostCrawlClient, ExtractedPost, RedditPost, TiktokPost
-
 # Load environment variables from .env file
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except ImportError:
-    # python-dotenv is optional, just continue without it
-    pass
+from dotenv import load_dotenv
+
+from postcrawl import PostCrawlClient, RedditPost, TiktokPost
+
+load_dotenv()
+
 
 API_KEY = os.getenv("POSTCRAWL_API_KEY", "sk_your_api_key_here")
 
@@ -36,7 +34,7 @@ async def main():
         results=3,
         page=1,
         include_comments=True,  # Extract comments too
-        response_mode="raw",    # Get full post data
+        response_mode="raw",  # Get full post data
     )
 
     # Print results - each post is of type ExtractedPost

@@ -1,146 +1,115 @@
 # PostCrawl Python SDK Examples
 
-This directory contains interactive examples demonstrating the PostCrawl Python SDK's functionality. Each example showcases different API endpoints and features.
+This directory contains example scripts demonstrating how to use the PostCrawl Python SDK.
 
 ## Prerequisites
 
-1. **Get an API key** from [postcrawl.com](https://postcrawl.com)
-2. **Set your API key**:
+1. **Install the SDK**:
+   ```bash
+   pip install postcrawl
+   # or with uv:
+   uv add postcrawl
+   ```
+
+2. **Get an API key** from [postcrawl.com](https://postcrawl.com)
+
+3. **Set your API key**:
    ```bash
    export POSTCRAWL_API_KEY=sk_your_api_key_here
-   ```
-3. **Install dependencies**:
-   ```bash
-   pip install postcrawl python-dotenv
-   # or with uv:
-   uv pip install postcrawl python-dotenv
    ```
 
 ## Available Examples
 
 ### 🔍 Search Example (`search_101.py`)
-Demonstrates basic search functionality:
-- Search across Reddit and TikTok platforms
-- Query for "python" related posts
-- Display results with title and URL
-
-### 📊 Extract Example (`extract_101.py`)
-Shows content extraction from URLs:
-- Extract content from Reddit and TikTok URLs
-- Handle platform-specific data with proper types (`RedditPost`, `TiktokPost`)
-- Display relevant fields based on platform
-
-### 🔍📊 Combined Search & Extract (`search_and_extract_101.py`)
-Demonstrates combined operation:
-- Search for "algorithms" across platforms
-- Extract full content including comments
-- Use proper type checking for platform-specific fields
-- Display Reddit-specific fields (subreddit, score, comments)
-- Display TikTok-specific fields (username, likes, hashtags)
-
-## Running Examples
+Search for content across Reddit and TikTok platforms.
 
 ```bash
-# Search functionality
 python search_101.py
+```
 
-# Extract functionality  
+**Features demonstrated:**
+- Search across multiple platforms
+- Pagination support
+- Result parsing and display
+
+### 📊 Extract Example (`extract_101.py`)
+Extract full content from social media URLs.
+
+```bash
 python extract_101.py
+```
 
-# Combined functionality
+**Features demonstrated:**
+- Extract content from Reddit and TikTok URLs
+- Handle platform-specific data types
+- Access comments and metadata
+
+### 🚀 Search & Extract Combined (`search_and_extract_101.py`)
+Perform search and extraction in a single operation.
+
+```bash
 python search_and_extract_101.py
 ```
 
-### Environment Configuration
+**Features demonstrated:**
+- Combined search and extract operation
+- Markdown formatting option
+- Type-safe access to platform data
+
+## Running the Examples
+
+### With environment variables:
+```bash
+export POSTCRAWL_API_KEY=sk_your_api_key_here
+python search_101.py
+```
+
+### With .env file:
 Create a `.env` file in the examples directory:
-```env
+```
 POSTCRAWL_API_KEY=sk_your_api_key_here
 ```
 
-Or set environment variables:
+Then run:
 ```bash
-export POSTCRAWL_API_KEY=sk_your_api_key_here
-export POSTCRAWL_API_URL=https://edge-alpha.postcrawl.com  # Optional
+python search_101.py
 ```
 
 ## Example Output
 
-Each example provides detailed output including:
-
 ```
-⚠️  CREDIT CONSUMPTION WARNING:
-This test will consume approximately 1 credit (10 results).
-Do you want to proceed? (y/n): y
+🔍 Searching for 'python programming' on Reddit...
 
-============================================================
-Testing: Search Endpoint - Basic
-============================================================
+Found 10 results:
 
-📤 Request: {
-  "social_platforms": ["reddit"],
-  "query": "pizza",
-  "results": 10,
-  "page": 1
-}
+1. "Best Python Resources for Beginners"
+   URL: https://reddit.com/r/learnpython/...
+   Date: Dec 28, 2024
+   Preview: I've been learning Python for 3 months...
 
-✅ PASS: Response is a list with 10 items
-✅ PASS: All items are SocialPost instances
-✅ PASS: All posts have valid structure
-✅ PASS: All posts are from Reddit as requested
-✅ PASS: Rate limit info available (limit: 1000)
-
-📋 Sample Results:
-  Title: Best Pizza Recipe Ever
-  Author: pizza_lover_2024
-  URL: https://reddit.com/r/cooking/...
-  Stats: 156 upvotes, 42 comments
-
-💰 Rate Limit Info:
-  Limit: 1000 requests
-  Remaining: 999 requests
-  Reset: 1641234567
-
-Summary: 5/5 tests passed
-✅ All search tests passed!
+2. "Python vs JavaScript in 2024"
+   URL: https://reddit.com/r/programming/...
+   Date: Dec 27, 2024
+   Preview: After using both languages extensively...
 ```
 
-## Credit Consumption Guide
+## Credit Usage
 
-| Operation | Typical Cost | Notes |
-|-----------|--------------|-------|
-| Search (10 results) | ~1 credit | Cost varies by platform |
-| Extract (1 URL, no comments) | ~1 credit | Per URL processed |
-| Extract (1 URL, with comments) | ~3 credits | Comments increase cost |
-| Search-and-Extract | Search cost + Extract cost | Combined operation |
+| Operation | Approximate Credits |
+|-----------|-------------------|
+| Search (10 results) | ~1 credit |
+| Extract (without comments) | ~1 credit per URL |
+| Extract (with comments) | ~3 credits per URL |
 
-**Important Notes:**
-- All examples show estimated credit costs before execution
-- Actual costs may vary based on content complexity
-- Invalid URLs are filtered out and don't consume credits
-- Rate limits vary by subscription tier
+## Tips
 
-## Testing vs Production
+- Start with small result counts to test
+- Use `include_comments=False` to reduce credit usage
+- Check rate limits with `client.rate_limit_info`
+- Handle errors gracefully (see exception handling in examples)
 
-These examples work with both:
-- **Production API**: `https://edge-alpha.postcrawl.com` (default)
-- **Local Development**: Set `POSTCRAWL_API_URL=http://localhost:8787`
+## Support
 
-For local testing with the scraping server:
-```bash
-# Terminal 1: Start scraping server
-cd apps/scraping-server-v1
-bun run dev
-
-# Terminal 2: Run examples with local API
-export POSTCRAWL_API_URL=http://localhost:8787
-uv run python search_example.py
-```
-
-## Best Practices
-
-1. **Always confirm credit consumption** - Each example asks before proceeding
-2. **Start with basic examples** - Try `basic_search.py` before `search_example.py`
-3. **Monitor rate limits** - Examples display rate limit information
-4. **Handle errors gracefully** - See `error_handling.py` for patterns
-5. **Use raw mode for structured data** - Better for programmatic access
-6. **Use markdown mode for readability** - Better for human consumption
+- Documentation: [github.com/post-crawl/python-sdk](https://github.com/post-crawl/python-sdk)
+- API Reference: [postcrawl.com/docs](https://postcrawl.com/docs)
+- Issues: [github.com/post-crawl/python-sdk/issues](https://github.com/post-crawl/python-sdk/issues)

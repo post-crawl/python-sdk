@@ -4,11 +4,11 @@ build-backend = "hatchling.build"
 
 [project]
 name = "postcrawl"
-version = "0.1.0"
+version = "0.1.2"
 description = "Python SDK for PostCrawl - The Fastest LLM Ready Social Media Crawler"
 readme = "README.md"
 requires-python = ">=3.10"
-license = "MIT"
+license = { text = "MIT" }
 authors = [{ name = "PostCrawl Team", email = "support@postcrawl.com" }]
 keywords = [
     "postcrawl",
@@ -51,9 +51,10 @@ dev = [
 
 [project.urls]
 Homepage = "https://postcrawl.com/"
-Documentation = "https://github.com/post-crawl/python-sdk/README.md"
+Documentation = "https://github.com/post-crawl/python-sdk"
 Repository = "https://github.com/post-crawl/python-sdk"
 Issues = "https://github.com/post-crawl/python-sdk/issues"
+Changelog = "https://github.com/post-crawl/python-sdk/releases"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/postcrawl"]
@@ -68,6 +69,7 @@ target-version = ["py310"]
 [tool.ruff]
 line-length = 100
 target-version = "py310"
+extend-exclude = ["src/postcrawl/generated_types.py"]
 
 [tool.ruff.lint]
 select = [
@@ -91,6 +93,13 @@ disallow_untyped_defs = true
 asyncio_mode = "auto"
 testpaths = ["tests"]
 
-# Remove old test-py workspace reference
-# [tool.uv.workspace]
-# members = ["test-py"]
+[tool.uv]
+dev-dependencies = [
+    "pytest>=7.4",
+    "pytest-asyncio>=0.21",
+    "pytest-httpx>=0.22",
+    "black>=23.0",
+    "mypy>=1.5",
+    "ruff>=0.1.0",
+    "ipython>=8.0",
+]

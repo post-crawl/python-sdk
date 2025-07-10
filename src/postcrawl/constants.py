@@ -4,7 +4,7 @@ PostCrawl API constants.
 
 # API endpoints
 # DEFAULT_BASE_URL="http://localhost:8787" # for dev
-DEFAULT_BASE_URL = "https://edge-alpha.postcrawl.com"
+DEFAULT_BASE_URL = "https://edge.postcrawl.com"
 API_VERSION = "v1"
 
 # Endpoints

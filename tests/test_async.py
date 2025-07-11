@@ -20,7 +20,7 @@ class TestAsyncMethods:
         """Test async search method."""
         httpx_mock.add_response(
             method="POST",
-            url="https://edge-alpha.postcrawl.com/v1/search",
+            url="https://edge.postcrawl.com/v1/search",
             json=mock_search_response,
             status_code=200,
         )
@@ -39,7 +39,7 @@ class TestAsyncMethods:
         """Test async extract method."""
         httpx_mock.add_response(
             method="POST",
-            url="https://edge-alpha.postcrawl.com/v1/extract",
+            url="https://edge.postcrawl.com/v1/extract",
             json=mock_extract_response,
             status_code=200,
         )
@@ -58,7 +58,7 @@ class TestAsyncMethods:
         """Test async search_and_extract method."""
         httpx_mock.add_response(
             method="POST",
-            url="https://edge-alpha.postcrawl.com/v1/search-and-extract",
+            url="https://edge.postcrawl.com/v1/search-and-extract",
             json=mock_extract_response[:2],
             status_code=200,
         )
@@ -80,7 +80,7 @@ class TestSyncMethods:
         """Test sync search wrapper."""
         httpx_mock.add_response(
             method="POST",
-            url="https://edge-alpha.postcrawl.com/v1/search",
+            url="https://edge.postcrawl.com/v1/search",
             json=mock_search_response,
             status_code=200,
         )
@@ -95,7 +95,7 @@ class TestSyncMethods:
         """Test sync extract wrapper."""
         httpx_mock.add_response(
             method="POST",
-            url="https://edge-alpha.postcrawl.com/v1/extract",
+            url="https://edge.postcrawl.com/v1/extract",
             json=mock_extract_response,
             status_code=200,
         )
@@ -116,7 +116,7 @@ class TestSyncMethods:
         """Test sync search_and_extract wrapper."""
         httpx_mock.add_response(
             method="POST",
-            url="https://edge-alpha.postcrawl.com/v1/search-and-extract",
+            url="https://edge.postcrawl.com/v1/search-and-extract",
             json=mock_extract_response[:2],
             status_code=200,
         )
@@ -142,7 +142,7 @@ class TestAsyncContextManager:
         """Test using client as async context manager."""
         httpx_mock.add_response(
             method="POST",
-            url="https://edge-alpha.postcrawl.com/v1/search",
+            url="https://edge.postcrawl.com/v1/search",
             json=[],
             status_code=200,
         )
@@ -177,7 +177,7 @@ class TestAsyncContextManager:
         # Mock multiple responses
         httpx_mock.add_response(
             method="POST",
-            url="https://edge-alpha.postcrawl.com/v1/search",
+            url="https://edge.postcrawl.com/v1/search",
             json=[
                 {
                     "title": "Result 1",
@@ -191,7 +191,7 @@ class TestAsyncContextManager:
         )
         httpx_mock.add_response(
             method="POST",
-            url="https://edge-alpha.postcrawl.com/v1/extract",
+            url="https://edge.postcrawl.com/v1/extract",
             json=[
                 {
                     "url": "https://example.com/1",
@@ -229,7 +229,7 @@ class TestAsyncConcurrency:
         for i in range(3):
             httpx_mock.add_response(
                 method="POST",
-                url="https://edge-alpha.postcrawl.com/v1/search",
+                url="https://edge.postcrawl.com/v1/search",
                 json=[
                     {
                         "title": f"Result {i}",
@@ -261,7 +261,7 @@ class TestAsyncConcurrency:
         """Test that sync methods work outside async context."""
         httpx_mock.add_response(
             method="POST",
-            url="https://edge-alpha.postcrawl.com/v1/search",
+            url="https://edge.postcrawl.com/v1/search",
             json=[],
             status_code=200,
         )
@@ -286,7 +286,7 @@ class TestAsyncErrorHandling:
         # Retry succeeds
         httpx_mock.add_response(
             method="POST",
-            url="https://edge-alpha.postcrawl.com/v1/search",
+            url="https://edge.postcrawl.com/v1/search",
             json=[],
             status_code=200,
         )

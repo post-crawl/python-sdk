@@ -26,7 +26,7 @@ class TestClientInitialization:
         """Test initialization with valid API key."""
         client = PostCrawlClient(api_key=api_key)
         assert client.api_key == api_key
-        assert client.base_url == "https://edge-alpha.postcrawl.com"
+        assert client.base_url == "https://edge.postcrawl.com"
         assert client.timeout == 90.0
         assert client.max_retries == 3
         assert client.retry_delay == 1.0
@@ -57,7 +57,7 @@ class TestSearchEndpoint:
         """Test successful search request."""
         httpx_mock.add_response(
             method="POST",
-            url="https://edge-alpha.postcrawl.com/v1/search",
+            url="https://edge.postcrawl.com/v1/search",
             json=mock_search_response,
             status_code=200,
             headers={
@@ -89,7 +89,7 @@ class TestSearchEndpoint:
         """Test search with no results."""
         httpx_mock.add_response(
             method="POST",
-            url="https://edge-alpha.postcrawl.com/v1/search",
+            url="https://edge.postcrawl.com/v1/search",
             json=[],
             status_code=200,
         )
@@ -125,7 +125,7 @@ class TestSearchEndpoint:
         """Test search with authentication error."""
         httpx_mock.add_response(
             method="POST",
-            url="https://edge-alpha.postcrawl.com/v1/search",
+            url="https://edge.postcrawl.com/v1/search",
             json={"error": "unauthorized", "message": "Invalid API key", "request_id": "req_123"},
             status_code=401,
         )
@@ -142,7 +142,7 @@ class TestSearchEndpoint:
         """Test search with rate limit error."""
         httpx_mock.add_response(
             method="POST",
-            url="https://edge-alpha.postcrawl.com/v1/search",
+            url="https://edge.postcrawl.com/v1/search",
             json={
                 "error": "rate_limit_exceeded",
                 "message": "Too many requests",
@@ -168,7 +168,7 @@ class TestExtractEndpoint:
         """Test successful extract request."""
         httpx_mock.add_response(
             method="POST",
-            url="https://edge-alpha.postcrawl.com/v1/extract",
+            url="https://edge.postcrawl.com/v1/extract",
             json=mock_extract_response,
             status_code=200,
         )
@@ -222,7 +222,7 @@ class TestExtractEndpoint:
 
         httpx_mock.add_response(
             method="POST",
-            url="https://edge-alpha.postcrawl.com/v1/extract",
+            url="https://edge.postcrawl.com/v1/extract",
             json=markdown_response,
             status_code=200,
         )
@@ -251,7 +251,7 @@ class TestExtractEndpoint:
         """Test extract with insufficient credits error."""
         httpx_mock.add_response(
             method="POST",
-            url="https://edge-alpha.postcrawl.com/v1/extract",
+            url="https://edge.postcrawl.com/v1/extract",
             json={
                 "error": "insufficient_credits",
                 "message": "Not enough credits. Required: 10, Available: 5",
@@ -280,7 +280,7 @@ class TestSearchAndExtractEndpoint:
         """Test successful search-and-extract request."""
         httpx_mock.add_response(
             method="POST",
-            url="https://edge-alpha.postcrawl.com/v1/search-and-extract",
+            url="https://edge.postcrawl.com/v1/search-and-extract",
             json=mock_extract_response[:2],  # Return first 2 items
             status_code=200,
         )
@@ -313,7 +313,7 @@ class TestNetworkAndRetry:
         # Second request succeeds
         httpx_mock.add_response(
             method="POST",
-            url="https://edge-alpha.postcrawl.com/v1/search",
+            url="https://edge.postcrawl.com/v1/search",
             json=[],
             status_code=200,
         )
@@ -358,7 +358,7 @@ class TestContextManager:
         """Test client works as async context manager."""
         httpx_mock.add_response(
             method="POST",
-            url="https://edge-alpha.postcrawl.com/v1/search",
+            url="https://edge.postcrawl.com/v1/search",
             json=[],
             status_code=200,
         )
@@ -396,7 +396,7 @@ class TestRateLimitInfo:
         """Test rate limit headers are properly parsed."""
         httpx_mock.add_response(
             method="POST",
-            url="https://edge-alpha.postcrawl.com/v1/search",
+            url="https://edge.postcrawl.com/v1/search",
             json=[],
             status_code=200,
             headers=mock_rate_limit_headers,
@@ -418,7 +418,7 @@ class TestErrorResponseHandling:
         """Test handling of malformed error responses."""
         httpx_mock.add_response(
             method="POST",
-            url="https://edge-alpha.postcrawl.com/v1/search",
+            url="https://edge.postcrawl.com/v1/search",
             text="Internal Server Error",
             status_code=500,
         )
@@ -435,7 +435,7 @@ class TestErrorResponseHandling:
         """Test validation error with field details."""
         httpx_mock.add_response(
             method="POST",
-            url="https://edge-alpha.postcrawl.com/v1/search",
+            url="https://edge.postcrawl.com/v1/search",
             json={
                 "error": "validation_error",
                 "message": "Validation failed",

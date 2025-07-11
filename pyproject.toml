@@ -47,7 +47,6 @@ dev = [
     "black>=23.0",
     "mypy>=1.5",
     "ruff>=0.1.0",
-    "twine>=4.0.0",
 ]
 
 [project.urls]
@@ -103,5 +102,9 @@ dev-dependencies = [
     "mypy>=1.5",
     "ruff>=0.1.0",
     "ipython>=8.0",
-    "twine>=4.0.0",
 ]
+
+[[tool.uv.index]]
+name = "testpypi"
+url = "https://test.pypi.org/simple/"
+publish-url = "https://test.pypi.org/legacy/"

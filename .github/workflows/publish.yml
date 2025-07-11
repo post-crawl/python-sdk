@@ -59,6 +59,13 @@ jobs:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
     
     steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "0.5.14"
+      
       - name: Download distributions
         uses: actions/download-artifact@v4
         with:
@@ -66,11 +73,12 @@ jobs:
           path: dist/
       
       - name: Publish to TestPyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          repository-url: https://test.pypi.org/legacy/
-          attestations: true
-          verbose: true
+        env:
+          # These are provided by GitHub for OIDC trusted publishing
+          ACTIONS_ID_TOKEN_REQUEST_TOKEN: ${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
+          ACTIONS_ID_TOKEN_REQUEST_URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}
+        run: |
+          uv publish --index testpypi dist/*
 
   publish-to-pypi:
     name: Publish to PyPI
@@ -85,6 +93,13 @@ jobs:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
     
     steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "0.5.14"
+      
       - name: Download distributions
         uses: actions/download-artifact@v4
         with:
@@ -92,10 +107,12 @@ jobs:
           path: dist/
       
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          attestations: true
-          verbose: true
+        env:
+          # These are provided by GitHub for OIDC trusted publishing
+          ACTIONS_ID_TOKEN_REQUEST_TOKEN: ${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
+          ACTIONS_ID_TOKEN_REQUEST_URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}
+        run: |
+          uv publish dist/*
 
   create-github-release:
     name: Sign and upload to GitHub Release

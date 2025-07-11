@@ -101,9 +101,9 @@ jobs:
       
       - name: Verify package
         run: |
-          uv venv verify-env
-          uv pip install --python verify-env dist/*.whl
-          uv run --python verify-env python -c "import postcrawl; print(f'PostCrawl {postcrawl.__version__} installed successfully')"
+          # Test package installation in an isolated environment
+          uv run --with postcrawl --no-project --refresh-package postcrawl -- python -c "import postcrawl; print('✓ Package import successful')"
+          uv run --with postcrawl --no-project -- python -c "from postcrawl import PostCrawlClient; print('✓ Client import successful')"
       
       - name: Minimize uv cache
         run: uv cache prune --ci

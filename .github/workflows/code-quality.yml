@@ -1,0 +1,90 @@
+name: Code Quality
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+env:
+  UV_CACHE_DIR: /tmp/.uv-cache
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  quality-check:
+    name: Code Quality Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "0.5.14"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+      
+      - name: Set up Python
+        run: uv python install
+      
+      - name: Install dependencies
+        run: uv sync --frozen --all-extras
+      
+      - name: Run ruff format check
+        id: ruff-format
+        run: |
+          uv run ruff format --check . || echo "formatting_needed=true" >> $GITHUB_OUTPUT
+        continue-on-error: true
+      
+      - name: Run ruff linter
+        id: ruff-lint
+        run: |
+          uv run ruff check . --output-format=github || echo "linting_needed=true" >> $GITHUB_OUTPUT
+        continue-on-error: true
+      
+      - name: Run mypy type check
+        id: mypy
+        run: |
+          uv run mypy src/postcrawl || echo "type_errors=true" >> $GITHUB_OUTPUT
+        continue-on-error: true
+      
+      - name: Comment PR with issues
+        if: github.event_name == 'pull_request' && (steps.ruff-format.outputs.formatting_needed == 'true' || steps.ruff-lint.outputs.linting_needed == 'true' || steps.mypy.outputs.type_errors == 'true')
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issues = [];
+            if ('${{ steps.ruff-format.outputs.formatting_needed }}' === 'true') {
+              issues.push('- Code formatting issues detected. Run `make format` to fix.');
+            }
+            if ('${{ steps.ruff-lint.outputs.linting_needed }}' === 'true') {
+              issues.push('- Linting issues detected. Run `make lint` to see details.');
+            }
+            if ('${{ steps.mypy.outputs.type_errors }}' === 'true') {
+              issues.push('- Type checking errors detected. Run `make typecheck` to see details.');
+            }
+            
+            if (issues.length > 0) {
+              const body = `## 🚨 Code Quality Issues\n\n${issues.join('\n')}\n\n` +
+                          `Run \`make check\` locally to fix all issues before pushing.`;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: body
+              });
+            }
+      
+      - name: Fail if quality checks failed
+        if: steps.ruff-format.outputs.formatting_needed == 'true' || steps.ruff-lint.outputs.linting_needed == 'true' || steps.mypy.outputs.type_errors == 'true'
+        run: |
+          echo "Code quality checks failed. Please run 'make check' locally."
+          exit 1
+      
+      - name: Minimize uv cache
+        run: uv cache prune --ci

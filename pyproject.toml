@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "postcrawl"
+name = "@post-crawl/python-sdk"
 version = "1.0.0"
 description = "Python SDK for PostCrawl - The Fastest LLM Ready Social Media Crawler"
 readme = "README.md"

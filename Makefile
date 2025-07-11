@@ -1,6 +1,6 @@
 # PostCrawl Python SDK Makefile
 
-.PHONY: help install test test-types clean format lint typecheck dev check examples search extract sne build verify publish-test
+.PHONY: help install test test-types clean format lint typecheck dev check examples search extract sne build verify publish-test version version-patch version-minor version-major
 
 # Default target - show help
 .DEFAULT_GOAL := help
@@ -28,6 +28,13 @@ help:
 	@echo "  make verify       Verify package installation"
 	@echo "  make clean        Clean build artifacts"
 	@echo "  make publish-test Publish to TestPyPI"
+	@echo "  make publish      Publish to PyPI"
+	@echo ""
+	@echo "Version Management:"
+	@echo "  make version      Show current version"
+	@echo "  make version-patch Bump patch version (e.g., 1.0.0 → 1.0.1)"
+	@echo "  make version-minor Bump minor version (e.g., 1.0.0 → 1.1.0)"
+	@echo "  make version-major Bump major version (e.g., 1.0.0 → 2.0.0)"
 	@echo ""
 	@echo "Type Generation:"
 	@echo "  make generate-types Regenerate types from TypeScript"
@@ -116,12 +123,30 @@ build: clean
 
 # Verify package installation
 verify: build
-	uv run python verify_package.py
+	@echo "Verifying package installation..."
+	uv run --with postcrawl --no-project --refresh-package postcrawl -- python -c "import postcrawl; print('✓ Package import successful')"
+	uv run --with postcrawl --no-project -- python -c "from postcrawl import PostCrawlClient; print('✓ Client import successful')"
 
 # Publish to TestPyPI
 publish-test: build
-	uv run twine upload --repository testpypi dist/*
+	@echo "Publishing to TestPyPI..."
+	uv publish --index testpypi
 
 # Publish to PyPI (production)
 publish: build
-	uv run twine upload dist/*
+	@echo "Publishing to PyPI..."
+	uv publish
+
+# Version management commands
+version:
+	@echo "Current version:"
+	@uv version
+
+version-patch:
+	uv version --bump patch
+
+version-minor:
+	uv version --bump minor
+
+version-major:
+	uv version --bump major

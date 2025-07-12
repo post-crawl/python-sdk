@@ -60,9 +60,9 @@ from postcrawl import PostCrawlClient
 
 async def main():
     # Initialize the client with your API key
-    async with PostCrawlClient(api_key="sk_your_api_key_here") as client:
+    async with PostCrawlClient(api_key="sk_your_api_key_here") as pc:
         # Search for content
-        results = await client.search(
+        results = await pc.search(
             social_platforms=["reddit"],
             query="machine learning",
             results=10,
@@ -84,17 +84,17 @@ asyncio.run(main())
 from postcrawl import PostCrawlClient
 
 # Initialize the client
-client = PostCrawlClient(api_key="sk_your_api_key_here")
+pc = PostCrawlClient(api_key="sk_your_api_key_here")
 
 # Search synchronously
-results = client.search_sync(
+results = pc.search_sync(
     social_platforms=["reddit", "tiktok"],
     query="artificial intelligence",
     results=5
 )
 
 # Extract content from URLs
-posts = client.extract_sync(
+posts = pc.extract_sync(
     urls=["https://reddit.com/r/...", "https://tiktok.com/@..."],
     include_comments=True
 )
@@ -105,7 +105,7 @@ posts = client.extract_sync(
 
 ### Search
 ```python
-results = await client.search(
+results = await pc.search(
     social_platforms=["reddit", "tiktok"],
     query="your search query",
     results=10,  # 1-100
@@ -115,7 +115,7 @@ results = await client.search(
 
 ### Extract
 ```python
-posts = await client.extract(
+posts = await pc.extract(
     urls=["https://reddit.com/...", "https://tiktok.com/..."],
     include_comments=True,
     response_mode="raw"  # or "markdown"
@@ -124,7 +124,7 @@ posts = await client.extract(
 
 ### Search and Extract
 ```python
-posts = await client.search_and_extract(
+posts = await pc.search_and_extract(
     social_platforms=["reddit"],
     query="search query",
     results=5,
@@ -137,9 +137,9 @@ posts = await client.search_and_extract(
 ### Synchronous Methods
 ```python
 # All methods have synchronous versions
-results = client.search_sync(...)
-posts = client.extract_sync(...)
-combined = client.search_and_extract_sync(...)
+results = pc.search_sync(...)
+posts = pc.extract_sync(...)
+combined = pc.search_and_extract_sync(...)
 ```
 
 ## Examples
@@ -184,7 +184,7 @@ The SDK provides type-safe access to platform-specific data:
 from postcrawl import PostCrawlClient, RedditPost, TiktokPost
 
 # Extract content with proper type handling
-posts = await client.extract(urls=["https://reddit.com/..."])
+posts = await pc.extract(urls=["https://reddit.com/..."])
 
 for post in posts:
     if post.error:
@@ -279,7 +279,7 @@ from dotenv import load_dotenv
 from postcrawl import PostCrawlClient
 
 load_dotenv()
-client = PostCrawlClient(api_key=os.getenv("POSTCRAWL_API_KEY"))
+pc = PostCrawlClient(api_key=os.getenv("POSTCRAWL_API_KEY"))
 ```
 
 ### Security Best Practices
@@ -300,12 +300,12 @@ PostCrawl uses a credit-based system:
 
 Rate limits are returned in response headers:
 ```python
-client = PostCrawlClient(api_key="sk_...")
-results = await client.search(...)
+pc = PostCrawlClient(api_key="sk_...")
+results = await pc.search(...)
 
-print(f"Rate limit: {client.rate_limit_info['limit']}")
-print(f"Remaining: {client.rate_limit_info['remaining']}")
-print(f"Reset at: {client.rate_limit_info['reset']}")
+print(f"Rate limit: {pc.rate_limit_info['limit']}")
+print(f"Remaining: {pc.rate_limit_info['remaining']}")
+print(f"Reset at: {pc.rate_limit_info['reset']}")
 ```
 
 ## Support

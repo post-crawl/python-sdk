@@ -13,7 +13,7 @@ EXTRACT_ENDPOINT = "/extract"
 SEARCH_AND_EXTRACT_ENDPOINT = "/search-and-extract"
 
 # Request defaults
-DEFAULT_TIMEOUT = 90.0  # seconds
+DEFAULT_TIMEOUT = None  # No timeout
 DEFAULT_MAX_RETRIES = 3
 DEFAULT_RETRY_DELAY = 1.0  # seconds
 

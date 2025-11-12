@@ -27,7 +27,7 @@ class TestClientInitialization:
         client = PostCrawlClient(api_key=api_key)
         assert client.api_key == api_key
         assert client.base_url == "https://edge.postcrawl.com"
-        assert client.timeout == 90.0
+        assert client.timeout is None  # No timeout by default
         assert client.max_retries == 3
         assert client.retry_delay == 1.0
 

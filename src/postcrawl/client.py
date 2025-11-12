@@ -53,7 +53,7 @@ class PostCrawlClient:
 
     Args:
         api_key: Your PostCrawl API key (starts with 'sk_')
-        timeout: Request timeout in seconds
+        timeout: Request timeout in seconds (None = no timeout)
         max_retries: Maximum number of retry attempts
         retry_delay: Delay between retries in seconds
 
@@ -81,7 +81,7 @@ class PostCrawlClient:
         self,
         api_key: str,
         *,
-        timeout: float = DEFAULT_TIMEOUT,
+        timeout: float | None = DEFAULT_TIMEOUT,
         max_retries: int = DEFAULT_MAX_RETRIES,
         retry_delay: float = DEFAULT_RETRY_DELAY,
     ):

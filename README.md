@@ -118,7 +118,11 @@ results = await pc.search(
 posts = await pc.extract(
     urls=["https://reddit.com/...", "https://tiktok.com/..."],
     include_comments=True,
-    response_mode="raw"  # or "markdown"
+    response_mode="raw",
+    comment_filter_config={
+        "min_score": 10,
+        "max_depth": 2
+    }
 )
 ```
 
@@ -129,8 +133,45 @@ posts = await pc.search_and_extract(
     query="search query",
     results=5,
     page=1,
-    include_comments=False,
-    response_mode="markdown"
+    include_comments=True,
+    response_mode="markdown",
+    comment_filter_config={
+        "tier_limits": {"0": 5, "1": 3},
+        "preserve_high_quality_threads": True
+    }
+)
+```
+
+### Comment Filtering
+The `comment_filter_config` dictionary allows you to filter comments server-side to reduce data transfer and improve performance:
+
+```python
+from postcrawl.types import CommentFilterConfig
+
+posts = await pc.extract(
+    urls=["..."],
+    include_comments=True,
+    comment_filter_config=CommentFilterConfig(
+        # Limit comments by depth level
+        tier_limits={
+            "0": 10, # Max 10 top-level comments
+            "1": 5,  # Max 5 replies per comment
+            "2": 2   # Max 2 nested replies
+        },
+        
+        # Minimum score/likes threshold
+        min_score=10,
+        
+        # Minimum quality relative to top comment (0.0-1.0)
+        top_comment_percentile=0.1,
+        
+        # Maximum depth to traverse
+        max_depth=5,
+        
+        # Preserve more replies for high-quality threads
+        preserve_high_quality_threads=True,
+        high_quality_thread_score=100
+    )
 )
 ```
 

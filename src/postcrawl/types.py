@@ -38,9 +38,45 @@ SocialPlatform = Literal["reddit", "tiktok"]
 ResponseMode = Literal["raw", "markdown"]
 
 
+class CommentFilterConfig(BaseModel):
+    """Configuration for server-side comment filtering."""
+
+    tier_limits: dict[str, int] | None = Field(
+        None,
+        description="Max comments at each depth level. Key=depth, Value=count.",
+    )
+    min_score: int | None = Field(
+        None,
+        description="Minimum score threshold (Reddit) or likes (TikTok).",
+    )
+    top_comment_percentile: float | None = Field(
+        None,
+        description="Minimum quality as percentage of top comment's score (0.0-1.0).",
+        ge=0,
+        le=1,
+    )
+    max_depth: int | None = Field(
+        None,
+        description="Maximum depth to traverse (nested reply levels).",
+        gt=0,
+    )
+    preserve_high_quality_threads: bool | None = Field(
+        None,
+        description="Whether to preserve more replies for high-quality threads.",
+    )
+    high_quality_thread_score: int | None = Field(
+        None,
+        description="Score threshold for 'high quality' thread preservation.",
+    )
+
+
 # Custom ExtractRequest with URL validation and field descriptions
 class ExtractRequest(GeneratedExtractRequest):
     """Request model for the extract endpoint with additional validation."""
+
+    comment_filter_config: CommentFilterConfig | None = Field(
+        None, description="Optional configuration for comment filtering."
+    )
 
     @field_validator("urls")
     @classmethod
@@ -84,6 +120,10 @@ class SearchRequest(GeneratedSearchRequest):
 # Custom SearchAndExtractRequest with validations
 class SearchAndExtractRequest(GeneratedSearchAndExtractRequest):
     """Request model for the search-and-extract endpoint with additional validation."""
+
+    comment_filter_config: CommentFilterConfig | None = Field(
+        None, description="Optional configuration for comment filtering."
+    )
 
     @field_validator("query")
     @classmethod
@@ -212,7 +252,9 @@ __all__ = [
     "TiktokComment",
     # Enums
     "SocialPlatform",
+    "SocialPlatform",
     "ResponseMode",
+    "CommentFilterConfig",
     # Error models
     "ErrorDetail",
     "ErrorResponse",

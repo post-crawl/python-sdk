@@ -32,6 +32,7 @@ from .exceptions import (
     ValidationError,
 )
 from .types import (
+    CommentFilterConfig,
     ErrorDetail,
     ErrorResponse,
     ExtractedPost,
@@ -296,6 +297,7 @@ class PostCrawlClient:
         urls: list[str],
         include_comments: bool = False,
         response_mode: ResponseMode = "raw",
+        comment_filter_config: CommentFilterConfig | None = None,
     ) -> ExtractResponse:
         """
         Extract content from social media URLs.
@@ -304,6 +306,7 @@ class PostCrawlClient:
             urls: List of URLs to extract (max 25)
             include_comments: Whether to include comments (default: False)
             response_mode: Response format ("raw" or "markdown", default: "raw")
+            comment_filter_config: Optional configuration for comment filtering
 
         Returns:
             List of extracted posts with content
@@ -321,6 +324,7 @@ class PostCrawlClient:
                 urls=urls,
                 include_comments=include_comments,
                 response_mode=response_mode,
+                comment_filter_config=comment_filter_config,
             )
         except PydanticValidationError as e:
             raise ValidationError(
@@ -355,6 +359,7 @@ class PostCrawlClient:
         page: int,
         include_comments: bool = False,
         response_mode: ResponseMode = "raw",
+        comment_filter_config: CommentFilterConfig | None = None,
     ) -> SearchAndExtractResponse:
         """
         Search for content and extract it in a single operation.
@@ -366,6 +371,7 @@ class PostCrawlClient:
             page: Page number for pagination (starts at 1)
             include_comments: Whether to include comments (default: False)
             response_mode: Response format ("raw" or "markdown", default: "raw")
+            comment_filter_config: Optional configuration for comment filtering
 
         Returns:
             List of extracted posts from search results
@@ -386,6 +392,7 @@ class PostCrawlClient:
                 page=page,
                 include_comments=include_comments,
                 response_mode=response_mode,
+                comment_filter_config=comment_filter_config,
             )
         except PydanticValidationError as e:
             raise ValidationError(
